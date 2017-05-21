@@ -50,14 +50,15 @@ chain: intermediate
 	@cat intermediate/certs/intermediate.cert.pem ca/certs/ca.cert.pem > chain/ca-chain.cert.pem
 	@chmod 444 chain/ca-chain.cert.pem
 
-validate: intermediate
+validate: 
 	@echo "Validating intermediate chain of trust..."
 	@openssl verify -CAfile ca/certs/ca.cert.pem \
 		      intermediate/certs/intermediate.cert.pem
 
 # expects parameter client 
-addclient: validate
-	@echo "Creating cerst for client: $(client)"
+addclient: 
+	@echo "Creating certs for client: $(client)"
+	@rm -rf clients/$(client)
 	$(call setup_directory,clients/$(client))
 	$(call generate_key,$(client),clients/$(client))
 	$(call create_csr,$(client),clients/$(client),$(client))
