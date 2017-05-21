@@ -6,7 +6,7 @@
 #	to read a csr: openssl req -noout -text -in $1
 #	to check a csr: openssl req -text -noout -verify -in $1
 
-.PHONEY = usage clean validate addclient
+.PHONY = usage clean validate addclient
 
 CURVE_NAME = secp384r1
 DN_BASE = /C=US/ST=Missouri/L=Saint Peters/O=indexoutofbounds/OU=Engineering

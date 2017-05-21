@@ -8,6 +8,15 @@ Create a root and intermediate ca
 ```bash
 make ca intermediate
 ```
+Create the chain of trust that has all the CA certs
+```bash
+make chain
+```
+Validate the chain of trust
+```bash
+make validate
+```
+
 Add the "travis" client
 ```bash
 make addclient client=travis
