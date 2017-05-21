@@ -48,14 +48,13 @@ chain: intermediate
 	@cat intermediate/certs/intermediate.cert.pem ca/certs/ca.cert.pem > chain/ca-chain.cert.pem
 	@chmod 444 chain/ca-chain.cert.pem
 
-validate:
+validate: intermediate
 	@echo "Validating intermediate chain of trust..."
 	@openssl verify -CAfile ca/certs/ca.cert.pem \
 		      intermediate/certs/intermediate.cert.pem
 
 # expects parameter client 
 addclient: chain
-	@rm -rf clients/$(client) 
 	$(call setup_directory,clients/$(client))
 	$(call generate_key,$(client),clients/$(client))
 	$(call create_csr,$(client),clients/$(client),$(client))
@@ -103,4 +102,3 @@ define sign_csr
 		-in $(2)/csr/$(1).csr.pem \
 		-out $(2)/certs/$(1).cert.pem
 endef
-
