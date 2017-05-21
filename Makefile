@@ -28,6 +28,7 @@ clean:
 	@rm -rf ca intermediate chain clients
 
 ca:
+	@echo "Creating root ca"
 	$(call setup_ca,ca)
 	$(call generate_key,ca,ca)
 	@openssl req -config openssl.cnf -new -x509 \
@@ -37,6 +38,7 @@ ca:
 		-out ca/certs/ca.cert.pem
 
 intermediate: ca 
+	@echo "Creating intermediate ca"
 	$(call setup_ca,intermediate)
 	$(call generate_key,intermediate,intermediate)
 	$(call create_csr,intermediate,intermediate,Intermediate CA Authority)
@@ -54,7 +56,8 @@ validate: intermediate
 		      intermediate/certs/intermediate.cert.pem
 
 # expects parameter client 
-addclient: chain
+addclient: validate
+	@echo "Creating cerst for client: $(client)"
 	$(call setup_directory,clients/$(client))
 	$(call generate_key,$(client),clients/$(client))
 	$(call create_csr,$(client),clients/$(client),$(client))
