@@ -8,13 +8,20 @@ Create a root and intermediate ca
 ```bash
 make ca intermediate
 ```
+
 Create the chain of trust that has all the CA certs
 ```bash
 make chain
 ```
+
 Validate the chain of trust
 ```bash
 make validate
+```
+
+Create certs/keys for the "node" server
+```bash
+make addserver server=node
 ```
 
 Add the "travis" client

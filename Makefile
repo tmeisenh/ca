@@ -25,7 +25,7 @@ usage:
 	@echo "----------------------------------------------------------------------"
 
 clean:
-	@rm -rf ca intermediate chain clients
+	@rm -rf ca intermediate chain servers clients
 
 ca:
 	@echo "Creating root ca"
@@ -43,7 +43,7 @@ intermediate: ca
 	$(call generate_key,intermediate,intermediate)
 	$(call create_csr,intermediate,intermediate,Intermediate CA Authority)
 	$(call sign_csr,intermediate,intermediate,root_ca,v3_intermediate_ca,3650)
-	@mkdir clients
+	@mkdir servers clients
 
 chain: intermediate
 	@mkdir chain
@@ -55,6 +55,15 @@ validate:
 	@openssl verify -CAfile ca/certs/ca.cert.pem \
 		      intermediate/certs/intermediate.cert.pem
 
+# expects parameter server
+addserver:
+	@echo "Creating certs for server: $(server)"
+	@rm -rf servers/$(server)
+	$(call setup_directory,servers/$(server))
+	$(call generate_key,$(server),servers/$(server))
+	$(call create_csr,$(server),servers/$(server),$(server))
+	$(call sign_csr,$(server),servers/$(server),intermediate_ca,server_cert,365)
+
 # expects parameter client 
 addclient: 
 	@echo "Creating certs for client: $(client)"
@@ -62,7 +71,7 @@ addclient:
 	$(call setup_directory,clients/$(client))
 	$(call generate_key,$(client),clients/$(client))
 	$(call create_csr,$(client),clients/$(client),$(client))
-	$(call sign_csr,$(client),clients/$(client),intermediate_ca,server_cert,365)
+	$(call sign_csr,$(client),clients/$(client),intermediate_ca,user_cert,365)
 
 ### Custom functions
 
