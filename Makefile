@@ -64,8 +64,8 @@ addserver:
 	$(call create_csr,$(server),servers/$(server),$(server))
 	$(call sign_csr,$(server),servers/$(server),intermediate_ca,server_cert,365)
 
-# expects parameter client 
-addclient: 
+# expects parameter client
+addclient:
 	@echo "Creating certs for client: $(client)"
 	@rm -rf clients/$(client)
 	$(call setup_directory,clients/$(client))
@@ -103,7 +103,7 @@ define create_csr
 		-new -sha256 \
 		-subj '$(DN_BASE)/CN=$(3)' \
 		-key $(2)/private/$(1).key.pem \
-		-out $(2)/csr/$(1).csr.pem	
+		-out $(2)/csr/$(1).csr.pem
 endef
 
 # name, rootPath, signing_ca, extensions, days
