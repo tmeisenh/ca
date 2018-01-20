@@ -1,6 +1,7 @@
 # Author: Travis B. Meisenheimer
 #
 # Makefile to create a root ca, an intermediate (signing) ca, and issue client certs.
+# Elliptic curve keys are used.
 #
 #	to read a cert:  openssl x509 -noout -text -in $1
 #	to read a csr: openssl req -noout -text -in $1
@@ -8,6 +9,7 @@
 
 .PHONY = usage clean validate addclient
 
+# Change these values to whatever you prefer.
 CURVE_NAME = secp384r1
 DN_BASE = /C=US/ST=Missouri/L=Saint Peters/O=indexoutofbounds/OU=Engineering
 
@@ -37,7 +39,7 @@ ca:
 		-key ca/private/ca.key.pem \
 		-out ca/certs/ca.cert.pem
 
-intermediate: ca 
+intermediate: ca
 	@echo "Creating intermediate ca"
 	$(call setup_ca,intermediate)
 	$(call generate_key,intermediate,intermediate)
@@ -50,7 +52,7 @@ chain: intermediate
 	@cat intermediate/certs/intermediate.cert.pem ca/certs/ca.cert.pem > chain/ca-chain.cert.pem
 	@chmod 444 chain/ca-chain.cert.pem
 
-validate: 
+validate:
 	@echo "Validating intermediate chain of trust..."
 	@openssl verify -CAfile ca/certs/ca.cert.pem \
 		      intermediate/certs/intermediate.cert.pem
